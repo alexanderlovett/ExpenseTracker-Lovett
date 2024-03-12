@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -57,7 +58,9 @@ public class AccountSummary extends HttpServlet {
 				preparedStatement.close();
 				
 				//if the user exists and the password is correct log the transaction 
-				String acctSql = "SELECT * FROM transactions where username = ? order by tranDate";
+					
+				String acctSql = "SELECT DATE_FORMAT(tranDate, '%d %b %Y') as Date, convert(tranAmt,char) as Amount, cmnt as Comment "
+						+ " FROM transactions where username = ? order by tranDate";
 				
 				Connection con = null;
 				PreparedStatement prepStat = null;
@@ -71,8 +74,14 @@ public class AccountSummary extends HttpServlet {
 				ResultSet rs1 = prepStat.executeQuery();
 				
 				if(rs1.next()) {
+					out.print("Date &nbsp;&nbsp;&nbsp;&nbsp; Amount &nbsp;&nbsp;&nbsp;&nbsp; Comment <br>");
 					while(rs1.next()) {
+						String tDate = rs1.getString("Date").trim();
+						String amt = rs1.getString("Amount").trim();
+						String cmnt = rs1.getString("Comment").trim();
 						
+						
+						out.println(tDate + "		" + amt +"		"+cmnt +"<br>");
 						
 					}
 					
@@ -88,10 +97,7 @@ public class AccountSummary extends HttpServlet {
 					
 				}
 				
-				
-				
 				con.close();
-				
 				
 			} else {
 				//if the user doesn't exist or the password is wrong give an error

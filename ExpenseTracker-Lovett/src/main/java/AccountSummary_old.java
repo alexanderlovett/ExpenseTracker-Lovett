@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,16 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class AddTransaction
+ * Servlet implementation class AccountSummary
  */
-@WebServlet("/AddTransaction")
-public class AddTransaction extends HttpServlet {
+@WebServlet("/AccountSummary_old")
+public class AccountSummary_old extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddTransaction() {
+    public AccountSummary_old() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,9 +36,6 @@ public class AddTransaction extends HttpServlet {
 		// TODO Auto-generated method stub
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
-		String cmnt = request.getParameter("comment");
-		String tranDate = request.getParameter("date");
-		Double transAmt = Double.parseDouble(request.getParameter("transAmt"));
 				
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
@@ -57,10 +55,16 @@ public class AddTransaction extends HttpServlet {
 			
 			if(rs.next()) {
 				connection.close();
+				preparedStatement.close();
 				
 				//if the user exists and the password is correct log the transaction 
-				String insertSql = "INSERT INTO transactions (id,username, tranDate, tranAmt, cmnt) "
-						+ "values (default, ?, ?, ?, ?)";
+				
+				out.println("Correct Username and password");
+				/*		
+				String acctSql = "SELECT DATE_FORMAT(tranDate, '%d %b %Y') as Date, convert(tranAmt,char) as Amount, cmnt as Comment "
+						+ " FROM transactions where username = ? order by tranDate";
+				
+				out.println(acctSql);
 				
 				Connection con = null;
 				PreparedStatement prepStat = null;
@@ -68,25 +72,43 @@ public class AddTransaction extends HttpServlet {
 				DBConnection.getDBConnection();
 				con = DBConnection.connection;	
 				
-				prepStat = con.prepareStatement(insertSql);
+				prepStat = con.prepareStatement(acctSql);
 				prepStat.setString(1, userName);
-				prepStat.setString(2, tranDate);
-				prepStat.setDouble(3, transAmt);
-				prepStat.setString(4, cmnt);
+		
+				ResultSet rs1 = prepStat.executeQuery();
 				
-				prepStat.execute();
+				if(rs1.next()) {
+					while(rs1.next()) {
+						String tDate = rs1.getString("Date").trim();
+						String amt = rs1.getString("Amount").trim();
+						String cmnt = rs1.getString("Comment").trim();
+						
+						out.println("Date       Amount      Comment + <br>");
+						out.println(tDate + " " + amt +"   "+cmnt +"<br>");
+						
+					}
+					
+					out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
+					out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
+					out.println("<a href=/ExpenseTracker-Lovett/AccountSummary.html>Account Summary</a> <br>");
+				} else {
+					
+					out.println(userName + "has no transactions.");
+					out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
+					out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
+					out.println("<a href=/ExpenseTracker-Lovett/AccountSummary.html>Account Summary</a> <br>");
+					
+				}
+				
+				
+				
 				con.close();
 				
-				out.println("Transaction Logged <br>" );
-				
-				out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
-				out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
-				out.println("<a href=/ExpenseTracker-Lovett/AccountSummary.html>Account Summary</a> <br>");
-				
+				*/
 			} else {
 				//if the user doesn't exist or the password is wrong give an error
-				out.println("Username (" + userName + ") or password incorrect <br>");
 				connection.close();
+				out.println("Username (" + userName + ") or password incorrect <br>");
 				
 				out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
 				out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
