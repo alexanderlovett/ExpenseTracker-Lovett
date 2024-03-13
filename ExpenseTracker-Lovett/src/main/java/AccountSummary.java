@@ -61,7 +61,7 @@ public class AccountSummary extends HttpServlet {
 			if(rs.next()) {
 				//if the user exists and the password is correct give the summary 
 				
-				out.println("Current Balance: " + rs.getString("trans") + "<br>");
+				out.println("Current Balance for " + userName + ": " +  rs.getString("trans") + "<br>");
 				
 				connection.close();
 				preparedStatement.close();

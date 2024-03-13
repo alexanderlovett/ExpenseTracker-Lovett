@@ -77,7 +77,7 @@ public class AddTransaction extends HttpServlet {
 				prepStat.execute();
 				con.close();
 				
-				out.println("Transaction Logged <br>" );
+				out.println("Transaction of "+ transAmt+" Logged for " + userName + "<br>" );
 				
 				out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
 				out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
