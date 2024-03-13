@@ -46,7 +46,12 @@ public class AccountSummary extends HttpServlet {
 			DBConnection.getDBConnection();
 			connection = DBConnection.connection;
 			
-			String selectSQL = "Select username from users where username = ? and password = ?";
+			String selectSQL = "select u.username, convert(u.startBal+ sum(coalesce(tranAmt,0)),char) trans "
+					+ "from users as u  "
+					+ "left join transactions as t on u.username=t.username "
+					+ "where u.username=? and u.password=?"
+					+ "group by u.username,u.startBal";
+			
 			preparedStatement = connection.prepareStatement(selectSQL);
 			preparedStatement.setString(1, userName);
 			preparedStatement.setString(2, password);
@@ -54,13 +59,18 @@ public class AccountSummary extends HttpServlet {
 			ResultSet rs = preparedStatement.executeQuery() ;
 			
 			if(rs.next()) {
+				//if the user exists and the password is correct give the summary 
+				
+				out.println("Current Balance: " + rs.getString("trans") + "<br>");
+				
 				connection.close();
 				preparedStatement.close();
 				
-				//if the user exists and the password is correct log the transaction 
-					
 				String acctSql = "SELECT DATE_FORMAT(tranDate, '%d %b %Y') as Date, convert(tranAmt,char) as Amount, cmnt as Comment "
-							+ " FROM transactions where username = ? order by tranDate desc limit 100";
+							+ " FROM transactions "
+							+ "where username = ? "
+							+ "order by tranDate desc "
+							+ "limit 100";
 				
 				Connection con = null;
 				PreparedStatement prepStat = null;
@@ -103,10 +113,12 @@ public class AccountSummary extends HttpServlet {
 				}
 				
 				con.close();
-				
+				prepStat.close();
 			} else {
 				//if the user doesn't exist or the password is wrong give an error
 				connection.close();
+				preparedStatement.close();
+				
 				out.println("Username (" + userName + ") or password incorrect <br>");
 				
 				out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
