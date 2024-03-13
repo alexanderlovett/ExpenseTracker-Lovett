@@ -11,7 +11,7 @@ public class UtilProp {
    //just right click on the config on the left and copy the path
    static String _PROP_FILENAME_OSX_LOCAL = "/Users/alexanderlovett/SoftwareEng/workspace4830/ExpenseTracker-Lovett/ExpenseTracker-Lovett/src/main/webapp/config.properties";
    // * Remote server path
-   static String _PROP_FILENAME_REMOTE = "/var/lib/tomcat9/webapps/webproject/config.properties";
+   static String _PROP_FILENAME_REMOTE = "/var/lib/tomcat9/webapps/ExpenseTracker-Lovett/config.properties";
    static Properties prop = new Properties();
 
    public static void loadProperty() throws Exception {
