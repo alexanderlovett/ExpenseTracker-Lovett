@@ -110,7 +110,7 @@ public class AccountSummary extends HttpServlet {
 					out.println("<a href=/ExpenseTracker-Lovett/AccountSummary.html>Account Summary</a> <br>");
 				} else {
 					
-					out.println(userName + "has no transactions.");
+					out.println(userName + " has no transactions.<br>");
 					out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
 					out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
 					out.println("<a href=/ExpenseTracker-Lovett/AccountSummary.html>Account Summary</a> <br>");
