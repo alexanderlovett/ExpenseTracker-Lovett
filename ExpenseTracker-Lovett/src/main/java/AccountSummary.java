@@ -1,10 +1,9 @@
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -13,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Servlet implementation class AccountSummary
@@ -60,7 +60,7 @@ public class AccountSummary extends HttpServlet {
 				//if the user exists and the password is correct log the transaction 
 					
 				String acctSql = "SELECT DATE_FORMAT(tranDate, '%d %b %Y') as Date, convert(tranAmt,char) as Amount, cmnt as Comment "
-						+ " FROM transactions where username = ? order by tranDate";
+							+ " FROM transactions where username = ? order by tranDate desc limit 100";
 				
 				Connection con = null;
 				PreparedStatement prepStat = null;
@@ -74,17 +74,22 @@ public class AccountSummary extends HttpServlet {
 				ResultSet rs1 = prepStat.executeQuery();
 				
 				if(rs1.next()) {
-					out.print("Date &nbsp;&nbsp;&nbsp;&nbsp; Amount &nbsp;&nbsp;&nbsp;&nbsp; Comment <br>");
+					//out.println("Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Amount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comment<br>");
+					//The following is borrowed from https://www.c-sharpcorner.com/UploadFile/satyapriyanayak/display-data-from-database-through-servlet-and-jdbc/
+					
+					out.println("<table border=1 width=50% height=50%>");
+					out.println("<tr><th>Date</th><th>Amount</th><th>Comment</th><tr>");
+					
 					while(rs1.next()) {
 						String tDate = rs1.getString("Date").trim();
 						String amt = rs1.getString("Amount").trim();
-						String cmnt = rs1.getString("Comment").trim();
+						String cmnt = rs1.getString("Comment").trim();	
+						out.println("<tr><td>" + tDate + "</td><td>" + amt + "</td><td>" + cmnt + "</td></tr>");
 						
-						
-						out.println(tDate + "		" + amt +"		"+cmnt +"<br>");
+						//out.println(tDate + "&nbsp;" + amt +"&nbsp;&nbsp;&nbsp;"+cmnt +"<br>");
 						
 					}
-					
+
 					out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
 					out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
 					out.println("<a href=/ExpenseTracker-Lovett/AccountSummary.html>Account Summary</a> <br>");
@@ -135,5 +140,4 @@ public class AccountSummary extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }
