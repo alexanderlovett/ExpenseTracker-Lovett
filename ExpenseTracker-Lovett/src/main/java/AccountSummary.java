@@ -85,21 +85,26 @@ public class AccountSummary extends HttpServlet {
 				
 				if(rs1.next()) {
 					//out.println("Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Amount&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comment<br>");
-					//The following is borrowed from https://www.c-sharpcorner.com/UploadFile/satyapriyanayak/display-data-from-database-through-servlet-and-jdbc/
+					//The following is modified from https://www.c-sharpcorner.com/UploadFile/satyapriyanayak/display-data-from-database-through-servlet-and-jdbc/
 					
-					out.println("<table border=1 width=50% height=50%>");
+					out.println("<html><body>");
+					out.println("<table border=1 width=50% height=10%>");
 					out.println("<tr><th>Date</th><th>Amount</th><th>Comment</th><tr>");
 					
+					String tDate = rs1.getString("Date").trim();
+					String amt = rs1.getString("Amount").trim();
+					String cmnt = rs1.getString("Comment").trim();	
+					out.println("<tr><td>" + tDate + "</td><td align=\"right\">" + amt + "</td><td>" + cmnt + "</td></tr>");
+					
 					while(rs1.next()) {
-						String tDate = rs1.getString("Date").trim();
-						String amt = rs1.getString("Amount").trim();
-						String cmnt = rs1.getString("Comment").trim();	
-						out.println("<tr><td>" + tDate + "</td><td>" + amt + "</td><td>" + cmnt + "</td></tr>");
-						
-						//out.println(tDate + "&nbsp;" + amt +"&nbsp;&nbsp;&nbsp;"+cmnt +"<br>");
-						
+						tDate = rs1.getString("Date").trim();
+						amt = rs1.getString("Amount").trim();
+						cmnt = rs1.getString("Comment").trim();	
+						out.println("<tr><td>" + tDate + "</td><td align=\"right\">" + amt + "</td><td>" + cmnt + "</td></tr>");
 					}
-
+					out.println("</table>");  
+		            out.println("</html></body>");
+		            
 					out.println("<a href=/ExpenseTracker-Lovett/NewUser.html>Add User</a> <br>");
 					out.println("<a href=/ExpenseTracker-Lovett/AddTransactions.html>Add Transaction</a> <br>");
 					out.println("<a href=/ExpenseTracker-Lovett/AccountSummary.html>Account Summary</a> <br>");
